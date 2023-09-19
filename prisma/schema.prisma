@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Users {
+  id       Int    @id @default(autoincrement())
+  personId Int    @unique(map: "personId")
+  roleId   Int
+  username String @unique(map: "username") @db.VarChar(100)
+  password String @db.VarChar(100)
+
+  @@index([roleId], map: "FK_Users_Role")
+  @@index([personId], map: "FK_Users_person")
+}
+
+model dayOfWork {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  processId  Int
+  quantity   Int
+  created_at DateTime @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
+
+  @@index([userId], map: "FK_dayOfWork_User")
+  @@index([processId], map: "FK_dayOfWork_process")
+}
+
+model people {
+  id             Int     @id @default(autoincrement())
+  documentTypeId Int
+  name           String  @db.VarChar(50)
+  lastname       String  @db.VarChar(50)
+  documentNumber String  @unique(map: "documentNumber") @db.VarChar(50)
+  phone          String? @db.VarChar(50)
+  cellphone      String  @unique(map: "cellphone") @db.VarChar(50)
+  address        String? @db.VarChar(255)
+  cityId         String? @db.VarChar(50)
+}
+
+model productProcesses {
+  id          Int     @id @default(autoincrement())
+  productId   Int
+  name        String  @db.VarChar(100)
+  order       Int
+  cost        Decimal @db.Decimal(18, 2)
+  description String? @db.VarChar(255)
+
+  @@index([productId], map: "FK_productProcesses_Product")
+}
+
+model products {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(100)
+  SKU         String  @unique(map: "SKU") @db.VarChar(100)
+  color       String  @db.VarChar(100)
+  size        String  @db.VarChar(50)
+  description String? @db.VarChar(255)
+  cost        Decimal @db.Decimal(18, 2)
+}
+
+model referenceTypes {
+  id          Int    @id @default(autoincrement())
+  referenceId Int
+  name        String @db.VarChar(50)
+  value       String @db.VarChar(255)
+
+  @@index([referenceId], map: "FK_Reference_ReferenceTypes")
+}
+
+model references {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(50)
+  value String @db.VarChar(255)
+}
+
+model roles {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(50)
+  description String? @db.VarChar(50)
+}
