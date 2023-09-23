@@ -1,46 +1,22 @@
+import { RoleEntity } from "@/models";
 import { NextResponse } from "next/server";
-import { PrismaDB } from "@/lib";
+import asyncHandler from "@/core/helpers/asyncHandler";
 
-export async function GET() {
-  try {
-    const notes = await PrismaDB.roles.findMany();
-    return NextResponse.json(notes);
-  } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        {
-          message: error.message,
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-  }
-}
+export const GET = async () =>
+  asyncHandler(async () => {
+    const items = await new RoleEntity().findMany();
+    return NextResponse.json(items);
+  });
 
-export async function POST(request: Request) {
-  try {
-    const { name, description } = await request.json();
+export const POST = async (req: Request) =>
+  asyncHandler(async () => {
+    const { name, description } = await req.json();
 
-    const newItem = await PrismaDB.roles.create({
-      data: {
-        name,
-        description,
-      },
+    const newItem = await new RoleEntity().create({
+      id: 0,
+      name,
+      description,
     });
 
     return NextResponse.json(newItem);
-  } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        {
-          message: error.message,
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-  }
-}
+  });

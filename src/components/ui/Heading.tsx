@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "@/lib";
 
 interface HeadingProps {
@@ -7,6 +6,7 @@ interface HeadingProps {
   icon: JSX.Element;
   iconColor?: string;
   bgColor?: string;
+  button?: JSX.Element;
 }
 
 const Heading = ({
@@ -15,6 +15,7 @@ const Heading = ({
   icon,
   iconColor,
   bgColor,
+  button,
 }: HeadingProps) => {
   return (
     <>
@@ -24,6 +25,7 @@ const Heading = ({
           <h2 className="text-3xl font-bold">{title}</h2>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
+        {button && <div>{button}</div>}
       </div>
     </>
   );
