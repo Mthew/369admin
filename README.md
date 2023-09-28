@@ -19,6 +19,8 @@ pscale connect lujan_world develop --port 3309
 pscale connect lujan_world develop --port 3306
 ```
 
+run => npx prisma db push, for syncronize to planetscale.
+
 ```bash
 npx prisma db push
 ```

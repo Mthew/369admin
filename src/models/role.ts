@@ -9,8 +9,15 @@ export default class RoleEntity {
   }
 
   async create(data: roles) {
+    console.log("DATA => ", {
+      name: data.name,
+      description: data.description,
+    });
     return await this.Entity.create({
-      data,
+      data: {
+        name: data.name,
+        description: data.description,
+      },
     });
   }
 
