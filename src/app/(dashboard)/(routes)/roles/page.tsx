@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 /*Componenets*/
 import { Button } from "antd";
-import List from "@/components/ui/Lists";
+import List from "@/components/ui/List";
 import { IdentificationIcon, EditIcon, DeleteIcon } from "@/components/icons";
 
 /*Hooks*/
@@ -30,7 +30,7 @@ const columns = [
 
 const ListCrud = () => {
   const router = useRouter();
-  const { list, getAll, remove } = useRole();
+  const { list, getAll, remove, setSelectedItem, loading } = useRole();
 
   useEffect(() => {
     getAll();
@@ -43,8 +43,15 @@ const ListCrud = () => {
         subtitle="Función que cumple un usuario en la empresa"
         iconTitle={<IdentificationIcon className="w-10 h-10 text-violet-500" />}
         bgColorTitle={"bg-violet-500/10"}
+        loading={loading}
         addButton={
-          <Button onClick={() => router.push(`${ROUTES.role}/new`)}>
+          <Button
+            loading={loading}
+            onClick={() => {
+              setSelectedItem(undefined);
+              router.push(`${ROUTES.role}/new`);
+            }}
+          >
             Agregar Role
           </Button>
         }
@@ -53,8 +60,10 @@ const ListCrud = () => {
             label: "Editar",
             icon: <EditIcon />,
             type: "default",
-            onClick: (record: any) =>
-              router.push(`${ROUTES.role}/${record.id}`),
+            onClick: (record: any) => {
+              setSelectedItem(record);
+              router.push(`${ROUTES.role}/${record.id}`);
+            },
           },
           {
             confirm: "¿Esta seguro de eliminar el registro?",

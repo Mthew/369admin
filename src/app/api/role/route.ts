@@ -1,6 +1,6 @@
 import { RoleEntity } from "@/models";
 import { NextResponse } from "next/server";
-import asyncHandler, { errorHandler } from "@/core/helpers/asyncHandler";
+import { errorHandler } from "@/core/helpers/asyncHandler";
 
 export const GET = async () => {
   try {
@@ -11,8 +11,8 @@ export const GET = async () => {
   }
 };
 
-export const POST = async (req: Request) =>
-  asyncHandler(async () => {
+export const POST = async (req: Request) => {
+  try {
     const { name, description } = await req.json();
 
     const newItem = await new RoleEntity().create({
@@ -22,4 +22,7 @@ export const POST = async (req: Request) =>
     });
 
     return NextResponse.json(newItem);
-  });
+  } catch (error) {
+    errorHandler(error);
+  }
+};

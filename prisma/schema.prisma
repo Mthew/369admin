@@ -19,7 +19,7 @@ model Users {
   @@index([personId], map: "FK_Users_person")
 }
 
-model dayOfWork {
+model DayOfWork {
   id         Int      @id @default(autoincrement())
   userId     Int
   processId  Int
@@ -30,7 +30,7 @@ model dayOfWork {
   @@index([processId], map: "FK_dayOfWork_process")
 }
 
-model people {
+model People {
   id             Int     @id @default(autoincrement())
   documentTypeId Int
   name           String  @db.VarChar(50)
@@ -42,7 +42,7 @@ model people {
   cityId         String? @db.VarChar(50)
 }
 
-model productProcesses {
+model ProductProcesses {
   id          Int     @id @default(autoincrement())
   productId   Int
   name        String  @db.VarChar(100)
@@ -53,7 +53,7 @@ model productProcesses {
   @@index([productId], map: "FK_productProcesses_Product")
 }
 
-model products {
+model Products {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(100)
   SKU         String  @unique(map: "SKU") @db.VarChar(100)
@@ -63,7 +63,7 @@ model products {
   cost        Decimal @db.Decimal(18, 2)
 }
 
-model referenceTypes {
+model ReferenceTypes {
   id          Int    @id @default(autoincrement())
   referenceId Int
   name        String @db.VarChar(50)
@@ -72,39 +72,39 @@ model referenceTypes {
   @@index([referenceId], map: "FK_Reference_ReferenceTypes")
 }
 
-model references {
+model References {
   id    Int    @id @default(autoincrement())
   name  String @db.VarChar(50)
   value String @db.VarChar(255)
 }
 
-model roles {
+model Roles {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(50)
-  description String? @db.VarChar(50)
+  description String? @db.VarChar(255)
 }
 
-model entryStock {
+model EntryStock {
   id          Int      @id @default(autoincrement())
   stockId     Int
   quantity    Int
-  description String?  @db.VarChar(50)
+  description String?  @db.VarChar(255)
   created_at  DateTime @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
 
   @@index([stockId], map: "FK_entryStock_stock")
 }
 
-model outStock {
+model OutStock {
   id          Int      @id @default(autoincrement())
   stockId     Int
   quantity    Int
-  description String?  @db.VarChar(50)
+  description String?  @db.VarChar(255)
   created_at  DateTime @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
 
   @@index([stockId], map: "FK_outStock_stock")
 }
 
-model stock {
+model Stock {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(100)
   SKU         String  @unique(map: "SKU") @db.VarChar(100)

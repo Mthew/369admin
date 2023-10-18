@@ -1,8 +1,7 @@
 "use client";
 
 /*libs*/
-import { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 /*components*/
 import { Button, Form, Input, Space } from "antd";
@@ -11,22 +10,20 @@ import { Heading } from "@/components/ui";
 
 /*hooks*/
 import { useRole } from "@/context/RoleContext";
+import { ROUTES } from "@/config/constants";
 
 const App: React.FC = () => {
   const router = useRouter();
-  const params = useParams();
-  const { create, item, getById } = useRole();
-
-  useEffect(() => {
-    if (params.id) {
-      getById(Number(params.id));
-    }
-  }, [params.id, item]);
+  const { create, selectedItem, update, loading } = useRole();
 
   const handlers = {
     async submit(values: any) {
-      console.log("VALUES =>>", values);
-      await create(values);
+      if (selectedItem) {
+        await update(selectedItem.id!, values);
+      } else {
+        await create(values);
+      }
+      router.replace(ROUTES.role);
     },
   };
 
@@ -37,14 +34,13 @@ const App: React.FC = () => {
         description="Función que cumple un usuario en la empresa"
         icon={<IdentificationIcon className="w-10 h-10 text-violet-500" />}
         bgColor="bg-violet-500/10"
-        button={<Button onClick={() => {}}>Agregar Role</Button>}
       />
       <div className="px-4 lg:px-8">
         <Form
           layout="vertical"
           autoComplete="off"
           onFinish={handlers.submit}
-          initialValues={item}
+          initialValues={selectedItem}
         >
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
@@ -61,7 +57,11 @@ const App: React.FC = () => {
               <Button type="primary" htmlType="submit">
                 Guardar
               </Button>
-              <Button htmlType="reset" onClick={() => router.back()}>
+              <Button
+                htmlType="reset"
+                onClick={() => router.back()}
+                loading={loading}
+              >
                 Cancelar
               </Button>
             </Space>

@@ -1,6 +1,6 @@
 import { PrismaDB } from "@/lib";
 
-import { roles } from "@prisma/client";
+import { Role } from "@/interfaces/role";
 
 export default class RoleEntity {
   private Entity: any;
@@ -8,11 +8,7 @@ export default class RoleEntity {
     this.Entity = PrismaDB.roles;
   }
 
-  async create(data: roles) {
-    console.log("DATA => ", {
-      name: data.name,
-      description: data.description,
-    });
+  async create(data: Role) {
     return await this.Entity.create({
       data: {
         name: data.name,
@@ -21,14 +17,14 @@ export default class RoleEntity {
     });
   }
 
-  async update(id: string, item: any) {
+  async update(id: string, item: Role) {
     return await this.Entity.update({
       where: { id: Number(id) },
       data: item,
     });
   }
 
-  async findByKey(filter: { key: string; value: any }) {}
+  async findByKey(filter: { key: string; value: Role }) {}
 
   async findById(id: string) {
     return await this.Entity.findUnique({

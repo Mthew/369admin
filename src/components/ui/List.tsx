@@ -4,6 +4,7 @@ import { ActionButton } from "@/interfaces/commons";
 
 interface Props {
   title: string;
+  loading?: boolean;
   subtitle: string;
   iconTitle: JSX.Element;
   bgColorTitle: string;
@@ -11,10 +12,12 @@ interface Props {
   dataSource: Array<any>;
   addButton: JSX.Element;
   addActions: Array<ActionButton>;
+  key?: string;
 }
 
 const List = ({
   title,
+  loading = false,
   columns,
   iconTitle,
   dataSource,
@@ -22,6 +25,7 @@ const List = ({
   addActions,
   subtitle,
   bgColorTitle,
+  key,
   ...rest
 }: Props) => {
   return (
@@ -35,6 +39,8 @@ const List = ({
       />
       <div className="px-4 lg:px-8">
         <Table
+          rowKey={key || "id"}
+          loading={loading}
           scroll={{ x: true }}
           columns={[
             ...columns.map((column: any) => {
