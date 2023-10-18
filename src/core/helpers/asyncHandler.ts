@@ -9,7 +9,7 @@ export default (execution: any) => {
   }
 };
 
-const errorHandler = (error: any) => {
+export const errorHandler = (error: any) => {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     console.log("ERROR => ", error);
     return NextResponse.json(

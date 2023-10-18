@@ -1,15 +1,27 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
+import instance from "@/lib/axios";
+import { url } from "inspector";
+
+const URLs = {
+  base: "/role",
+};
 
 export const RoleContext = createContext<{
-  roles: Array<[]>;
-  loadRoles: () => Promise<void>;
-  createRole: (role: any) => Promise<void>;
+  item: {};
+  list: Array<[]>;
+  getAll: () => Promise<void>;
+  create: (role: any) => Promise<void>;
+  remove: (id: number) => Promise<void>;
+  getById: (id: number) => any;
 }>({
-  roles: [],
-  loadRoles: async () => {},
-  createRole: async ({}) => {},
+  item: {},
+  list: [],
+  getAll: async () => {},
+  create: async ({}) => {},
+  remove: async (id: number) => {},
+  getById: (id: number) => {},
 });
 
 export const useRole = () => {
@@ -21,28 +33,32 @@ export const useRole = () => {
 };
 
 export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
-  const [roles, setRoles] = useState<Array<any>>([]);
+  const [list, setList] = useState<Array<any>>([]);
+  const [item, setItem] = useState<any>({});
 
-  async function loadRoles() {
-    const res = await fetch("/api/roles");
-    const data = await res.json();
-    setRoles(roles);
+  async function getAll() {
+    const res = await instance.get(URLs.base);
+    setList(res.data);
   }
 
-  async function createRole(role: any) {
-    const res = await fetch("/api/role", {
-      method: "POST",
-      body: JSON.stringify(role),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const newItem = await res.json();
-    setRoles([...roles, newItem]);
+  const getById = async (id: number) => {
+    const res = list.find((x) => x.id === id);
+    setItem(res);
+  };
+
+  async function create(role: any) {
+    const res = await instance.post(URLs.base, role);
+    const newItem = await res.data;
+    setList([...list, newItem]);
   }
+
+  async function remove(roleId: number) {}
+  async function update(roleId: number, role: any) {}
 
   return (
-    <RoleContext.Provider value={{ roles, loadRoles, createRole }}>
+    <RoleContext.Provider
+      value={{ list, item, getById, getAll, create, remove }}
+    >
       {children}
     </RoleContext.Provider>
   );

@@ -5,14 +5,15 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 /*Componenets*/
-import { Table, Button } from "antd";
+import { Button } from "antd";
+import List from "@/components/ui/Lists";
 import { IdentificationIcon, EditIcon, DeleteIcon } from "@/components/icons";
-import { Heading, ConfirmButton } from "@/components/ui";
 
 /*Hooks*/
 import { useRole } from "@/context/RoleContext";
 
-import { ROUTES } from "@/lib/constants";
+/*Constants*/
+import { ROUTES } from "@/config/constants";
 
 const columns = [
   {
@@ -25,49 +26,50 @@ const columns = [
     dataIndex: "description",
     key: "description",
   },
-  {
-    title: "Acciones",
-    dataIndex: "actions",
-    key: "actions",
-    render: (text: string, record: any) => (
-      <>
-        <Button icon={<EditIcon />} />
-        <ConfirmButton
-          icon={<DeleteIcon />}
-          onConfirm={() => {}}
-          textConfirm=""
-        />
-      </>
-    ),
-  },
 ];
 
-const List = () => {
+const ListCrud = () => {
   const router = useRouter();
-  const { roles, loadRoles } = useRole();
+  const { list, getAll, remove } = useRole();
 
   useEffect(() => {
-    loadRoles();
+    getAll();
   }, []);
 
   return (
     <>
-      <Heading
+      <List
         title="Roles"
-        description="Función que cumple un usuario en la empresa"
-        icon={<IdentificationIcon className="w-10 h-10 text-violet-500" />}
-        bgColor="bg-violet-500/10"
-        button={
+        subtitle="Función que cumple un usuario en la empresa"
+        iconTitle={<IdentificationIcon className="w-10 h-10 text-violet-500" />}
+        bgColorTitle={"bg-violet-500/10"}
+        addButton={
           <Button onClick={() => router.push(`${ROUTES.role}/new`)}>
             Agregar Role
           </Button>
         }
+        addActions={[
+          {
+            label: "Editar",
+            icon: <EditIcon />,
+            type: "default",
+            onClick: (record: any) =>
+              router.push(`${ROUTES.role}/${record.id}`),
+          },
+          {
+            confirm: "¿Esta seguro de eliminar el registro?",
+            label: "Eliminar",
+            danger: true,
+            icon: <DeleteIcon />,
+            type: "primary",
+            onClick: (record: any) => remove(record.id),
+          },
+        ]}
+        columns={columns}
+        dataSource={list}
       />
-      <div className="px-4 lg:px-8">
-        <Table columns={columns} dataSource={roles} />
-      </div>
     </>
   );
 };
 
-export default List;
+export default ListCrud;

@@ -83,3 +83,35 @@ model roles {
   name        String  @db.VarChar(50)
   description String? @db.VarChar(50)
 }
+
+model entryStock {
+  id          Int      @id @default(autoincrement())
+  stockId     Int
+  quantity    Int
+  description String?  @db.VarChar(50)
+  created_at  DateTime @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
+
+  @@index([stockId], map: "FK_entryStock_stock")
+}
+
+model outStock {
+  id          Int      @id @default(autoincrement())
+  stockId     Int
+  quantity    Int
+  description String?  @db.VarChar(50)
+  created_at  DateTime @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
+
+  @@index([stockId], map: "FK_outStock_stock")
+}
+
+model stock {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(100)
+  SKU         String  @unique(map: "SKU") @db.VarChar(100)
+  color1      String? @db.VarChar(100)
+  color2      String? @db.VarChar(100)
+  size        String  @db.VarChar(50)
+  description String? @db.VarChar(255)
+  cost        Decimal @db.Decimal(18, 2)
+  price       Decimal @db.Decimal(18, 2)
+}

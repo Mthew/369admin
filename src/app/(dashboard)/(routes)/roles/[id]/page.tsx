@@ -1,7 +1,8 @@
 "use client";
 
 /*libs*/
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 /*components*/
 import { Button, Form, Input, Space } from "antd";
@@ -13,12 +14,19 @@ import { useRole } from "@/context/RoleContext";
 
 const App: React.FC = () => {
   const router = useRouter();
-  const { createRole } = useRole();
+  const params = useParams();
+  const { create, item, getById } = useRole();
+
+  useEffect(() => {
+    if (params.id) {
+      getById(Number(params.id));
+    }
+  }, [params.id, item]);
 
   const handlers = {
     async submit(values: any) {
       console.log("VALUES =>>", values);
-      await createRole(values);
+      await create(values);
     },
   };
 
@@ -32,7 +40,12 @@ const App: React.FC = () => {
         button={<Button onClick={() => {}}>Agregar Role</Button>}
       />
       <div className="px-4 lg:px-8">
-        <Form layout="vertical" autoComplete="off" onFinish={handlers.submit}>
+        <Form
+          layout="vertical"
+          autoComplete="off"
+          onFinish={handlers.submit}
+          initialValues={item}
+        >
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>

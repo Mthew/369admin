@@ -1,12 +1,15 @@
 import { RoleEntity } from "@/models";
 import { NextResponse } from "next/server";
-import asyncHandler from "@/core/helpers/asyncHandler";
+import asyncHandler, { errorHandler } from "@/core/helpers/asyncHandler";
 
-export const GET = async () =>
-  asyncHandler(async () => {
+export const GET = async () => {
+  try {
     const items = await new RoleEntity().findMany();
     return NextResponse.json(items);
-  });
+  } catch (error) {
+    errorHandler(error);
+  }
+};
 
 export const POST = async (req: Request) =>
   asyncHandler(async () => {
